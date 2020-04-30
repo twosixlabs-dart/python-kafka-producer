@@ -1,0 +1,8 @@
+{
+    "app": {
+        "id": "test_pyproducer"
+    },
+    "topic": {
+        "to": "testin"
+    }
+}

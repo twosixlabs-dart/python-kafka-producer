@@ -11,25 +11,47 @@ This project is a part of a collection of Python examples for working with kafka
 - [Consumer](https://github.com/twosixlabs-dart/python-kafka-consumer)
 - [Environment](https://github.com/twosixlabs-dart/kafka-examples-docker)
 
-The environment is detailed more [here](#Getting-Started).
-
-The *producer* in this example is a task that publishes to the `stream.in` topic on a periodic. That is it! This project is relatively simple, and so the structure of the project is simple and may not entirely reflect a complex application/use of `Faust`.
+The *producer* in this example is a task that publishes to some topic on a periodic. That is it!
 
 ## Getting Started
 
-Getting started with these examples requires a complete Kafka environment (with Zookeeper). The [Environment](https://github.com/twosixlabs-dart/kafka-examples-docker) project contains a docker-compose file for setting up everything. As this is a set of Python examples, just stand up the provided Python environment with:
+Getting started with this example requires a complete Kafka environment. [This project](https://github.com/twosixlabs-dart/kafka-examples-docker) contains a docker-compose file for setting up everything. You can use the configuration inputs to connect to a preexisting infrastructure if you have one already.
+
+If you do not have a Python installation ready, you can configure the input and then build the Dockerfile and run the resulting image with:
 
 ```shell
-docker-compose -f python.yml pull
-docker-compose -f python.yml up -d
+docker build -t python-kafka-producer-local .
+docker run --env PROGRAM_ARGS=wm-sasl-example -it python-kafka-producer-local:latest 
 ```
 
-This will pull down the images needed and begin running everything. You can observe what is going on by looking at the logs for each of the three Python components (either one at a time or in multiple terminals):
 
-```shell
-docker logs -f kafka-examples-docker_stream-processor_1
-docker logs -f kafka-examples-docker_producer
-docker logs -f kafka-examples-docker_consumer
+### Configuration File & SASL/SSL
+
+The code here is configured to use JSON resources found at the subpackage `pyproducer.resources.env`. Your configuration must be found within the [pyproducer/resources/env](pyproducer/resources/env) directory. When specifying your own you may omit the `.json` extension; it will attempt to load it as it and if that fails will attempt to load it assuming a `.json` extension. The default is to point to the [wm-sasl-example](/pyproducer/resources/env/wm-sasl-example.json) configuration (which contains mostly nothing). Here is the expected format of the input file:
+
+```json
+{
+    "broker": "",
+    "auth": {
+        "username": "",
+        "password": ""
+    },
+    "app": {
+        "id": ""
+    },
+    "topic": {
+        "to": ""
+    },
+}
 ```
 
-The stream-processor and producer will only have some startup and debug output, but the consumer will show messages being send through to the consumer's `stdout`, containing breadcrumbs from the producer, then the stream-processor, and finally the consumer itself.
+* `broker` - the hostname + port of the Kafka broker
+* `auth`
+  * `username` - username for SASL authentication
+  * `password` - password for SASL authentication
+* `app`
+  * `id` - unique identifier for your application/group
+* `topic`
+  * `to` - topic to publish to; currently only a single topic may be specified
+
+These options are subject to change/refinement, and others may be introduced in the future.

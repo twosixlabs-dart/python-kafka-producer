@@ -1,2 +1,3 @@
-from pyproducer.app import app
-app.main()
+import pyproducer.app
+pyproducer.app.create_app()
+pyproducer.app.main()

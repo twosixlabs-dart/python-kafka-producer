@@ -1,0 +1,13 @@
+{
+    "broker": "CHANGEME",
+    "auth": {
+        "username": "CHANGEME",
+        "password": "CHANGEME"
+    },
+    "app": {
+        "id": "CHANGEME"
+    },
+    "topic": {
+        "to": "CHANGEME"
+    }
+}
