@@ -27,8 +27,7 @@ def create_app():
         autodiscover=True,
         origin='pyproducer',
         broker=broker,
-        broker_credentials=broker_credentials,
-        topic_disable_leader=True
+        broker_credentials=broker_credentials
     )
 
     create_producer(app)
